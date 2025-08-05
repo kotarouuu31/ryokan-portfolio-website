@@ -2,6 +2,8 @@ import { Header } from '@/components/layout/Header';
 import { Hero } from '@/components/sections/Hero';
 import { News } from '@/components/sections/News';
 import { Accommodation } from '@/components/sections/Accommodation';
+import { Dining } from '@/components/sections/Dining';
+import { ImageSlider } from '@/components/sections/ImageSlider';
 import { Experience } from '@/components/sections/Experience';
 import { Access } from '@/components/sections/Access';
 
@@ -12,6 +14,8 @@ export default function Home() {
       <Hero />
       <News />
       <Accommodation />
+      <Dining />
+      <ImageSlider />
       <Experience />
       <Access />
     </div>
