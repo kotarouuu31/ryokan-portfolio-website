@@ -5,6 +5,7 @@ import { Accommodation } from '@/components/sections/Accommodation';
 import { Dining } from '@/components/sections/Dining';
 import { ImageSlider } from '@/components/sections/ImageSlider';
 import { Experience } from '@/components/sections/Experience';
+import CastleImage from '@/components/sections/CastleImage';
 import { Access } from '@/components/sections/Access';
 
 export default function Home() {
@@ -17,6 +18,7 @@ export default function Home() {
       <Dining />
       <ImageSlider />
       <Experience />
+      <CastleImage />
       <Access />
     </div>
   );

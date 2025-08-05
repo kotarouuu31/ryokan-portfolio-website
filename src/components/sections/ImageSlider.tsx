@@ -44,7 +44,7 @@ const slides: SlideItem[] = [
 // 無限ループのために配列を3倍にする
 const infiniteSlides = [...slides, ...slides, ...slides];
 
-const SlideCard: React.FC<{ slide: SlideItem }> = ({ slide }) => {
+const SlideCard: React.FC<{ slide: SlideItem; index: number }> = ({ slide, index }) => {
   const colors = {
     '茶': 'from-green-100 to-emerald-100 text-green-700',
     '犬山城': 'from-stone-100 to-gray-100 text-stone-700',
@@ -54,15 +54,23 @@ const SlideCard: React.FC<{ slide: SlideItem }> = ({ slide }) => {
     '荵苳酒': 'from-purple-100 to-violet-100 text-purple-700'
   };
   const colorClass = colors[slide.title as keyof typeof colors] || 'from-gray-100 to-slate-100 text-gray-700';
+  
+  // 段々配置のための上下オフセット
+  const isEven = index % 2 === 0;
+  const marginTop = isEven ? 'mt-0' : 'mt-8 md:mt-12';
 
   return (
-    <div className="flex-shrink-0 w-80 md:w-96 mx-2 md:mx-4">
-      <div className="relative aspect-[3/4] rounded-lg overflow-hidden group">
+    <div className={`flex-shrink-0 w-64 md:w-72 mx-2 md:mx-3 ${marginTop}`}>
+      <div className="relative aspect-[2/3] rounded-lg overflow-hidden group">
         <div className={`w-full h-full bg-gradient-to-br ${colorClass} flex items-center justify-center transition-transform duration-700 group-hover:scale-105`}>
           <div className="text-center">
             <div 
               className="text-2xl md:text-3xl font-light mb-2"
-              style={{ fontFamily: '"Noto Serif JP", serif' }}
+              style={{ 
+                fontFamily: '"Noto Serif JP", serif',
+                writingMode: 'vertical-rl',
+                textOrientation: 'upright'
+              }}
             >
               {slide.title}
             </div>
@@ -76,7 +84,11 @@ const SlideCard: React.FC<{ slide: SlideItem }> = ({ slide }) => {
             <div className="bg-black bg-opacity-50 rounded px-3 py-2 inline-block">
               <h3 
                 className="text-white text-lg md:text-xl font-light"
-                style={{ fontFamily: '"Noto Serif JP", serif' }}
+                style={{ 
+                  fontFamily: '"Noto Serif JP", serif',
+                  writingMode: 'vertical-rl',
+                  textOrientation: 'upright'
+                }}
               >
                 {slide.title}
               </h3>
@@ -97,9 +109,9 @@ export const ImageSlider: React.FC = () => {
     if (!slider) return;
 
     let translateX = 0;
-    const slideWidth = 320 + 32; // カード幅 + マージン (w-80 + mx-4)
+    const slideWidth = 256 + 16; // カード幅 + マージン (w-64 + mx-2)
     const totalWidth = slideWidth * slides.length;
-    const speed = 0.5; // ピクセル/フレーム
+    const speed = 1.2; // ピクセル/フレーム
 
     const animate = () => {
       translateX -= speed;
@@ -135,7 +147,7 @@ export const ImageSlider: React.FC = () => {
             }}
           >
             {infiniteSlides.map((slide, index) => (
-              <SlideCard key={`${slide.id}-${index}`} slide={slide} />
+              <SlideCard key={`${slide.id}-${index}`} slide={slide} index={index} />
             ))}
           </div>
         </div>
