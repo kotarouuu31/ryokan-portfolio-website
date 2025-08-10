@@ -1,20 +1,55 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export const Hero: React.FC = () => {
-  const scrollToNext = () => {
-    const nextSection = document.querySelector('#news');
-    if (nextSection) {
-      nextSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const heroSection = document.getElementById('hero-section');
+      if (!heroSection) return;
+
+      const rect = heroSection.getBoundingClientRect();
+      const sectionHeight = heroSection.offsetHeight;
+      const viewportHeight = window.innerHeight;
+      
+      // Calculate scroll progress within the hero section (0 to 1)
+      const scrollTop = -rect.top;
+      const progress = Math.max(0, Math.min(1, scrollTop / (sectionHeight - viewportHeight)));
+      
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Initial calculation
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Calculate opacity for content switching
+  const firstContentOpacity = scrollProgress < 0.5 
+    ? 1 
+    : scrollProgress < 0.6 
+    ? 1 - ((scrollProgress - 0.5) / 0.1) 
+    : 0;
+
+  const secondContentOpacity = scrollProgress < 0.6 
+    ? 0 
+    : scrollProgress < 0.7 
+    ? (scrollProgress - 0.6) / 0.1 
+    : 1;
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-white">
-      {/* Background Image with proper spacing */}
-      <div className="absolute inset-0 z-0 m-4 md:m-6 lg:m-8 xl:m-12">
+    <section 
+      id="hero-section" 
+      className="relative bg-white"
+      style={{ height: '200vh' }} // 200vh for 2-stage scrolling
+    >
+      {/* Background Image with proper spacing - Fixed position */}
+      <div className="fixed inset-0 z-0 m-4 md:m-6 lg:m-8 xl:m-12">
         <div className="w-full h-full rounded-lg md:rounded-xl lg:rounded-2xl overflow-hidden relative">
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -27,8 +62,11 @@ export const Hero: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Hero Content */}
-      <div className="relative z-10 h-screen flex flex-col justify-center items-center">
+      {/* First Content Area - Initial Display */}
+      <div 
+        className="sticky top-0 z-10 h-screen flex flex-col justify-center items-center transition-opacity duration-500"
+        style={{ opacity: firstContentOpacity }}
+      >
         <div className="text-center max-w-4xl mx-auto px-6 md:px-8 lg:px-12">
           {/* Logo Icon - Three-layer roof design */}
           <motion.div
@@ -95,7 +133,7 @@ export const Hero: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.9 }}
           >
-            一忍冬香る古蔵にて
+            ―忍冬香る古蔵にて
           </motion.p>
 
           {/* English Description */}
@@ -111,13 +149,11 @@ export const Hero: React.FC = () => {
 
         {/* Scroll Indicator - Bottom Right */}
         <div className="absolute bottom-12 md:bottom-16 lg:bottom-20 right-8 md:right-12 lg:right-16">
-          <motion.button
-            onClick={scrollToNext}
+          <motion.div
             className="flex flex-col items-center text-white/70 hover:text-white transition-colors duration-300"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.5 }}
-            whileHover={{ y: -2 }}
           >
             <span
               className="text-sm md:text-base font-light mb-2 tracking-wider"
@@ -143,7 +179,65 @@ export const Hero: React.FC = () => {
                 />
               </svg>
             </motion.div>
-          </motion.button>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Second Content Area - Detail Text */}
+      <div 
+        className="sticky top-0 z-10 h-screen flex items-center transition-opacity duration-500"
+        style={{ opacity: secondContentOpacity, marginTop: '-100vh' }}
+      >
+        <div className="max-w-6xl mx-auto px-6 md:px-8 lg:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+          {/* Left Column - Detail Text */}
+          <div className="space-y-8">
+            <motion.h3
+              className="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-8 tracking-wide"
+              style={{ fontFamily: '"Noto Serif JP", serif' }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: secondContentOpacity > 0 ? 1 : 0, y: secondContentOpacity > 0 ? 0 : 30 }}
+              transition={{ duration: 1, delay: 0.3 }}
+            >
+              忍冬＜スイカズラ＞。
+            </motion.h3>
+
+            <motion.div
+              className="space-y-6 text-white/90 leading-relaxed"
+              style={{ fontFamily: '"Noto Serif JP", serif' }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: secondContentOpacity > 0 ? 1 : 0, y: secondContentOpacity > 0 ? 0 : 30 }}
+              transition={{ duration: 1, delay: 0.6 }}
+            >
+              <p className="text-base md:text-lg font-light">
+                『冬をしのぐ』と書くこの植物は、古くから生薬として用いられここ犬山の地では、薬酒として人々の暮らしと滋養に寄り添ってきました。
+              </p>
+              
+              <p className="text-base md:text-lg font-light">
+                私たちの宿は、400年もの間、忍冬酒を醸してきた空間で『すこやかな暮らし』と『心身をととのえる時間』を体験していただく場所です。
+              </p>
+              
+              <p className="text-base md:text-lg font-light">
+                喧騒から少し離れた犬山の町並みのなかで。一杯のお酒と一膳のお食事、そして一輪の香りが旅人の心とからだに、そっと余白をもたらしますように。
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: secondContentOpacity > 0 ? 1 : 0, y: secondContentOpacity > 0 ? 0 : 20 }}
+              transition={{ duration: 1, delay: 0.9 }}
+            >
+              <Link 
+                href="#accommodation"
+                className="inline-block text-white/80 hover:text-white border-b border-white/30 hover:border-white transition-colors duration-300 text-lg font-light tracking-wider"
+                style={{ fontFamily: '"Noto Serif JP", serif' }}
+              >
+                宿について
+              </Link>
+            </motion.div>
+          </div>
+
+          {/* Right Column - Empty for balance */}
+          <div className="hidden lg:block"></div>
         </div>
       </div>
     </section>
