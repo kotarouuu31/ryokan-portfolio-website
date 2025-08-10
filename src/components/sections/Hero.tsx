@@ -1,40 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-
-// Slideshow data
-const slides = [
-  {
-    id: 1,
-    backgroundImage: 'https://images.unsplash.com/photo-1545569341-9eb8b30979d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-    mainTitle: '心とからだをほどく',
-    subtitle: 'Unwind Your Mind and Body',
-    description: '犬山の静寂に包まれた古民家で、日常を忘れる特別なひとときを。',
-  },
-  {
-    id: 2,
-    backgroundImage: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
-    mainTitle: '忍冬＜スイカズラ＞',
-    subtitle: 'Honeysuckle',
-    description: '季節の移ろいとともに、心に寄り添う宿の物語をお届けします。',
-  },
-];
+import React from 'react';
+import { motion } from 'framer-motion';
 
 export const Hero: React.FC = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  // Auto-switch slides every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const scrollToNext = () => {
     const nextSection = document.querySelector('#news');
     if (nextSection) {
@@ -42,111 +11,109 @@ export const Hero: React.FC = () => {
     }
   };
 
-
-
-  const slideVariants = {
-    enter: { opacity: 0 },
-    center: { opacity: 1 },
-    exit: { opacity: 0 },
-  };
-
   return (
     <section className="relative min-h-screen overflow-hidden bg-white">
-      {/* Background Images with auto-switching */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentSlide}
-          className="absolute inset-0 z-0 p-4 md:p-6 lg:p-8 xl:p-12"
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{ duration: 1.5, ease: 'easeInOut' }}
-        >
+      {/* Background Image with proper spacing */}
+      <div className="absolute inset-0 z-0 m-4 md:m-6 lg:m-8 xl:m-12">
+        <div className="w-full h-full rounded-lg md:rounded-xl lg:rounded-2xl overflow-hidden relative">
           <div
-            className="w-full h-full bg-cover bg-center bg-no-repeat rounded-lg md:rounded-xl lg:rounded-2xl overflow-hidden"
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
-              backgroundImage: `url("${slides[currentSlide].backgroundImage}")`,
+              backgroundImage: `url("/images/zubottyDSC00820_TP_V.jpg")`,
             }}
-          >
-            {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-black/40" />
-          </div>
-        </motion.div>
-      </AnimatePresence>
+          />
+          {/* Dark Overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/30" />
+        </div>
+      </div>
 
-      {/* Main Hero Content - Full screen centered */}
-      <div className="relative z-10 h-screen flex flex-col justify-center">
-        {/* Auto-switching content */}
-        <AnimatePresence mode="wait">
+      {/* Main Hero Content */}
+      <div className="relative z-10 h-screen flex flex-col justify-center items-center">
+        <div className="text-center max-w-4xl mx-auto px-6 md:px-8 lg:px-12">
+          {/* Logo Icon - Three-layer roof design */}
           <motion.div
-            key={currentSlide}
-            className="flex-1 flex flex-col justify-center px-6 md:px-8 lg:px-12"
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
+            className="mb-8"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.3 }}
           >
-            <div className="text-center max-w-4xl mx-auto">
-              <motion.h1
-                className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light text-white mb-4 md:mb-6 tracking-wide"
-                style={{ fontFamily: '"Noto Serif JP", serif' }}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.5 }}
+            <div className="flex justify-center mb-4">
+              <svg 
+                width="80" 
+                height="60" 
+                viewBox="0 0 80 60" 
+                fill="none" 
+                className="text-white"
               >
-                {slides[currentSlide].mainTitle}
-              </motion.h1>
-              <motion.p
-                className="text-lg md:text-xl lg:text-2xl text-white/90 font-light tracking-wider mb-8 md:mb-10"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.7 }}
-              >
-                {slides[currentSlide].subtitle}
-              </motion.p>
-              <motion.p
-                className="text-base md:text-lg lg:text-xl text-white/90 leading-relaxed mb-8 md:mb-10 lg:mb-12 font-light"
-                style={{ fontFamily: '"Noto Serif JP", serif' }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.9 }}
-              >
-                {slides[currentSlide].description}
-              </motion.p>
-              <motion.div
-                className="flex flex-col sm:flex-row gap-4 justify-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 1.1 }}
-              >
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
-                  style={{ fontFamily: '"Noto Serif JP", serif' }}
-                >
-                  宿について
-                </Button>
-                <Button
-                  variant="primary"
-                  size="lg"
-                  className="bg-white text-gray-900 hover:bg-white/90"
-                  style={{ fontFamily: '"Noto Serif JP", serif' }}
-                >
-                  ご予約
-                </Button>
-              </motion.div>
+                {/* Three-layer traditional roof icon */}
+                <path 
+                  d="M10 50 L40 30 L70 50 L65 50 L40 35 L15 50 Z" 
+                  fill="currentColor" 
+                />
+                <path 
+                  d="M15 40 L40 25 L65 40 L60 40 L40 30 L20 40 Z" 
+                  fill="currentColor" 
+                />
+                <path 
+                  d="M20 30 L40 20 L60 30 L55 30 L40 25 L25 30 Z" 
+                  fill="currentColor" 
+                />
+              </svg>
             </div>
+            
+            {/* Hotel Name */}
+            <h1 
+              className="text-2xl md:text-3xl font-light text-white mb-2 tracking-wider"
+              style={{ fontFamily: '"Noto Serif JP", serif' }}
+            >
+              宿
+            </h1>
+            <p 
+              className="text-lg md:text-xl font-light text-white/90 tracking-widest"
+              style={{ fontFamily: '"Noto Serif JP", serif' }}
+            >
+              -SHUKU-
+            </p>
           </motion.div>
-        </AnimatePresence>
 
-        {/* Scroll Button - Bottom with larger margin */}
-        <div className="flex-shrink-0 flex justify-center pb-12 md:pb-16 lg:pb-20">
+          {/* Main Catchphrase */}
+          <motion.h2
+            className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-6 md:mb-8 tracking-wide leading-tight"
+            style={{ fontFamily: '"Noto Serif JP", serif' }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.6 }}
+          >
+            心とからだをほどく。
+          </motion.h2>
+
+          {/* Subtitle */}
+          <motion.p
+            className="text-lg md:text-xl lg:text-2xl text-white/90 font-light mb-4 md:mb-6 tracking-wide"
+            style={{ fontFamily: '"Noto Serif JP", serif' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.9 }}
+          >
+            一忍冬香る古蔵にて
+          </motion.p>
+
+          {/* English Description */}
+          <motion.p
+            className="text-base md:text-lg text-white/80 font-light leading-relaxed tracking-wide"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 1.2 }}
+          >
+            Soothe your senses in the quiet embrace of an old brewery.
+          </motion.p>
+        </div>
+
+        {/* Scroll Indicator - Bottom Right */}
+        <div className="absolute bottom-12 md:bottom-16 lg:bottom-20 right-8 md:right-12 lg:right-16">
           <motion.button
             onClick={scrollToNext}
-            className="flex flex-col items-center text-white/80 hover:text-white transition-colors duration-300 group"
+            className="flex flex-col items-center text-white/70 hover:text-white transition-colors duration-300"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 1.5 }}
@@ -162,7 +129,19 @@ export const Hero: React.FC = () => {
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <ChevronDown className="w-5 h-5 md:w-6 md:h-6" />
+              <svg 
+                className="w-4 h-4 md:w-5 md:h-5" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={1.5} 
+                  d="M19 14l-7 7m0 0l-7-7m7 7V3" 
+                />
+              </svg>
             </motion.div>
           </motion.button>
         </div>

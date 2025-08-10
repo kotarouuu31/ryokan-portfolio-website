@@ -33,16 +33,16 @@ const newsData = [
 
 export const News: React.FC = () => {
   return (
-    <section id="news" className="py-16 md:py-24 bg-white">
+    <section id="news" className="py-16 md:py-24 relative">
       <div className="container mx-auto px-6 md:px-8 lg:px-12">
         <div className="text-center mb-12 md:mb-16">
           <h2 
-            className="text-3xl md:text-4xl lg:text-5xl font-light text-gray-800 mb-2"
+            className="text-3xl md:text-4xl lg:text-5xl font-light text-white mb-2"
             style={{ fontFamily: '"Noto Serif JP", serif' }}
           >
             お知らせ
           </h2>
-          <p className="text-lg md:text-xl text-gray-500 font-light tracking-wider">
+          <p className="text-lg md:text-xl text-white/80 font-light tracking-wider">
             News
           </p>
         </div>

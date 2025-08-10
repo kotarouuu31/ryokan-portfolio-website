@@ -135,7 +135,7 @@ export const ImageSlider: React.FC = () => {
   }, []);
 
   return (
-    <section className="py-8 md:py-12 bg-white overflow-hidden">
+    <section className="py-8 md:py-12 relative overflow-hidden">
       <div className="relative">
         {/* スライダーコンテナ */}
         <div className="overflow-hidden">
